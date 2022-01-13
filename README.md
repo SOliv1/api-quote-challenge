@@ -1,3 +1,5 @@
+[![pages-build-deployment](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment)
+
 ## Features
 
 ### BUILD A BACK-END WITH NODE/EXPRESS.JS
