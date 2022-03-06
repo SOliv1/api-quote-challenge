@@ -5,7 +5,7 @@ const app = express();
 const { quotes } = require('./data');
 const { getRandomElement } = require('./utils');
 
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.PORT || 4000;
 
 app.use(express.static('public'));
 
@@ -15,21 +15,20 @@ app.get('/api/quotes/random', (req, res) => {
   });
 });
 
-app.get('/api/quotes', (req, res) => {
+app.get('/api/quotes', (req, res, next) => {
   if (req.query.person !== undefined) {
     const quotesByPerson = quotes.filter(quote => quote.person === req.query.person);
     res.send({
       quotes: quotesByPerson
-    });
+  });
   } else {
-    res.send({
-      quotes: quotes
-    });
+      res.send({quotes:quotes
+      });
   }
 });
 
 app.post('/api/quotes', (req, res) => {
-  const newQuote = {
+   const newQuote = {
     quote: req.query.quote,
     person: req.query.person
   };
@@ -44,3 +43,4 @@ app.post('/api/quotes', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}.`);
 });
+
