@@ -1,4 +1,7 @@
 [![pages-build-deployment](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2e690e64-7716-4b7b-a0c6-056b35601e43/deploy-status?branch=master)](https://app.netlify.com/sites/quotes-api-app/deploys)
+
+You can view on netlify [here](https://quotes-api-app.netlify.app/)
 
 ## Features
 
