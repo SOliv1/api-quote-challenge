@@ -11,6 +11,8 @@ You can view on netlify [here](https://quotes-api-app.netlify.app/)
 
 #### Overview
 
+npm install to add all dependencies
+
 *command: node server.js*
 
 *using node* 
