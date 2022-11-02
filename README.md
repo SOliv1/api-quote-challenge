@@ -1,8 +1,5 @@
 [![pages-build-deployment](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment)
-[![CodeQL](https://github.com/SOliv1/Quote-Api-Challenge/actions/workflows/codeql.yml/badge.svg)](https://github.com/SOliv1/Quote-Api-Challenge/actions/workflows/codeql.yml)
-
-
-
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/SOliv1/api-quote-challenge/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/SOliv1/api-quote-challenge/tree/master)
 
 You can view on Render [here](https://quote-api.onrender.com/)
 
