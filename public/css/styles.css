@@ -3,6 +3,13 @@
   box-sizing: border-box;
 }
 
+body {
+  background: radial-gradient(circle at 30% 20%, #6a00f4 0%, #3a0088 40%, #0b0033 100%);
+  background-attachment: fixed;
+  color: #f8f6ff;
+}
+
+
 body.add-quote-page,
 body.home-page {
   margin: 0;
