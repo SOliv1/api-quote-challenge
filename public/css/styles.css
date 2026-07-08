@@ -372,3 +372,63 @@ body.home-page .decorative-q {
     font-size: 1.02rem;
   }
 }
+
+/* Splash Screen */
+#splash {
+  background: linear-gradient(135deg, #6a00f4, #00b3b3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  animation: fadeOut 2.5s ease forwards;
+}
+
+#splash img {
+  width: 160px;
+  filter: drop-shadow(0 0 20px rgba(106, 0, 244, 0.5));
+  animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: radial-gradient(circle at 30% 20%, #0b0033 0%, #3a0088 40%, #00b3b3 100%);
+    color: #e8e6ff;
+  }
+
+  #submit-quote {
+    background: linear-gradient(135deg, #00b3b3, #6a00f4);
+    box-shadow: 0 0 25px rgba(0, 179, 179, 0.4);
+  }
+
+  input {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
