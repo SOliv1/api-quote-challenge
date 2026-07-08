@@ -1,4 +1,8 @@
-const quotes = [
+const natureQuotes = require('./nature.json');
+const poeticQuotes = require('./poetic.json');
+const wildcardQuotes = require('./wildcard.json');
+
+const technologyQuotes = [
   {
     quote: 'We build our computer (systems) the way we build our cities: over time, without a plan, on top of ruins.',
     person: 'Ellen Ullman'
@@ -50,10 +54,34 @@ const quotes = [
   {
     quote: 'If you tell me precisely what it is a machine cannot do, then I can always make a machine which will do just that.',
     person: 'Jon von Neumann'
-  },
+  }
 ];
 
+const addCategory = (quotesList, category) =>
+  quotesList.map((quote) => ({
+    ...quote,
+    category
+  }));
+
+const allQuotes = [
+  ...addCategory(technologyQuotes, 'technology'),
+  ...addCategory(natureQuotes, 'nature'),
+  ...addCategory(poeticQuotes, 'poetic'),
+  ...addCategory(wildcardQuotes, 'wildcard')
+];
+
+const quotes = allQuotes
+  .filter((quote) => quote && quote.quote)
+  .map((quote) => ({
+    quote: quote.quote,
+    person: quote.person || quote.author || 'Unknown',
+    category: quote.category || 'general'
+  }));
+
 module.exports = {
+  technologyQuotes,
+  natureQuotes,
+  poeticQuotes,
+  wildcardQuotes,
   quotes
 };
-console.log(quotes)
