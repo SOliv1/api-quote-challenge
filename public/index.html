@@ -90,54 +90,35 @@
 
         <div class="home-copy">
           <h2>Get Quotes</h2>
-          <p>
-            Browse everything, fetch a quick random quote, or narrow results by
-            author and category.
-          </p>
+          <p>Fetch a single quote, toggle categories, or explore by author.</p>
         </div>
 
-        <div class="home-controls">
-          <div class="control-group">
-            <h3>Browse Quotes</h3>
-            <div class="action-stack">
-              <button id="fetch-random">Fetch a Random Quote</button>
-              <button id="fetch-quotes">Fetch all Quotes</button>
-            </div>
-          </div>
+        <!-- NEW: Single Quote Viewer -->
+        <section id="quote-viewer" class="results-panel">
+          <h2>Quote</h2>
+          <p id="quote-text" class="fade">-</p>
+          <p id="quote-person" class="fade">-</p>
 
+          <div class="action-stack inline-actions">
+            <button id="toggle-category">Category: Cinematic</button>
+            <button id="next-quote">Next Quote</button>
+          </div>
+        </section>
+
+        <!-- NEW: Author Filter (kept, but simplified) -->
+        <div class="home-controls">
           <div class="control-group">
             <h3>Filter by Author</h3>
             <label for="author">Author name</label>
             <input id="author" value="" placeholder="Grace Hopper" />
             <button id="fetch-by-author">Fetch by Author</button>
           </div>
-
-          <div class="control-group">
-            <h3>Category Shortcuts</h3>
-            <div class="action-stack inline-actions">
-              <button id="toggle-category">Toggle Category: Cinematic</button>
-            </div>
-          </div>
         </div>
-
-        <section class="results-panel">
-          <h2>Results</h2>
-          <div id="quote-container">-</div>
-        </section>
-
-        <section id="cinematic" class="results-panel">
-          <h2>Cinematic Quotes</h2>
-          <div id="cinematic-list">-</div>
-        </section>
-
-        <section id="random" class="results-panel">
-          <h2>Random Quotes</h2>
-          <div id="random-list">-</div>
-        </section>
       </section>
 
       <aside class="decorative-q" aria-hidden="true"></aside>
     </main>
+
     <script src="js/script.js"></script>
   </body>
 </html>

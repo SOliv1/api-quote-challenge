@@ -1,13 +1,9 @@
-const fetchAllButton = document.getElementById('fetch-quotes');
-const fetchRandomButton = document.getElementById('fetch-random');
+const nextQuoteButton = document.getElementById('next-quote');
 const fetchByAuthorButton = document.getElementById('fetch-by-author');
 const toggleCategoryButton = document.getElementById('toggle-category');
 
-const quoteContainer = document.getElementById('quote-container');
-const cinematicListContainer = document.getElementById('cinematic-list');
-const randomListContainer = document.getElementById('random-list');
-const quoteText = document.querySelector('.quote');
-const attributionText = document.querySelector('.attribution');
+const quoteText = document.getElementById('quote-text');
+const quotePerson = document.getElementById('quote-person');
 const splashElement = document.getElementById('splash');
 const homeShell = document.querySelector('.home-shell');
 let activeCategory = 'cinematic';
@@ -28,52 +24,29 @@ if (splashElement && homeShell) {
   revealHome();
 }
 
-const resetQuotes = () => {
-  quoteContainer.innerHTML = '';
-}
+const showMessage = (message, person = '') => {
+  quoteText.classList.remove('show');
+  quotePerson.classList.remove('show');
 
-const renderError = response => {
-  quoteContainer.innerHTML = `<p>Your request returned an error from the server: </p>
-<p>Code: ${response.status}</p>
-<p>${response.statusText}</p>`;
-}
+  setTimeout(() => {
+    quoteText.textContent = message;
+    quotePerson.textContent = person;
+    quoteText.classList.add('show');
+    quotePerson.classList.add('show');
+  }, 120);
+};
 
-const renderQuotes = (quotes = []) => {
-  resetQuotes();
-  if (quotes.length > 0) {
-    quotes.forEach(quote => {
-      const quoteContent = quote.text || quote.quote;
-      const newQuote = document.createElement('div');
-      newQuote.className = 'single-quote';
-      newQuote.innerHTML = `<div class="quote-text">${quoteContent}</div>
-      <div class="attribution">- ${quote.person}</div>
-      <div class="attribution">Category: ${quote.category || 'general'}</div>`;
-      quoteContainer.appendChild(newQuote);
-    });
-  } else {
-    quoteContainer.innerHTML = '<p>Your request returned no quotes.</p>';
-  }
-}
+showMessage('-', '');
 
-const renderCategoryQuotes = (targetElement, quotes = [], emptyMessage) => {
-  if (!targetElement) {
+const renderQuote = (quote) => {
+  if (!quote) {
+    showMessage('No quotes found.', '');
     return;
   }
 
-  targetElement.innerHTML = '';
-
-  if (quotes.length > 0) {
-    quotes.forEach((quote) => {
-      const quoteContent = quote.text || quote.quote;
-      const newQuote = document.createElement('div');
-      newQuote.className = 'single-quote';
-      newQuote.innerHTML = `<div class="quote-text">${quoteContent}</div>
-      <div class="attribution">- ${quote.person}</div>`;
-      targetElement.appendChild(newQuote);
-    });
-  } else {
-    targetElement.innerHTML = `<p>${emptyMessage}</p>`;
-  }
+  const quoteContent = quote.text || quote.quote;
+  const person = quote.person ? `- ${quote.person}` : '';
+  showMessage(`"${quoteContent}"`, person);
 };
 
 const fetchQuotes = (path) => {
@@ -83,25 +56,26 @@ const fetchQuotes = (path) => {
         return response.json();
       }
 
-      renderError(response);
+      showMessage(`Request failed: ${response.status} ${response.statusText}`, '');
       return [];
     })
     .then((response) => {
-      return Array.isArray(response) ? response : response.quotes;
+      return Array.isArray(response) ? response : response.quotes || [];
     });
 };
 
-const fetchAllQuotes = () => {
-  fetchQuotes('/quotes')
-  .then(quotes => {
-    renderQuotes(quotes);
-  });
+const getRandomQuote = (quotes = []) => {
+  if (quotes.length === 0) {
+    return null;
+  }
+
+  return quotes[Math.floor(Math.random() * quotes.length)];
 };
 
 const fetchRandomQuote = () => {
-  fetchQuotes('/quotes/random')
+  fetchQuotes(`/quotes/${activeCategory}`)
   .then(quotes => {
-    renderQuotes(quotes.length > 0 ? [quotes[Math.floor(Math.random() * quotes.length)]] : []);
+    renderQuote(getRandomQuote(quotes));
   });
 };
 
@@ -109,21 +83,20 @@ const fetchByAuthor = () => {
   const author = document.getElementById('author').value;
   fetchQuotes(`/quotes?person=${encodeURIComponent(author)}`)
   .then(quotes => {
-    renderQuotes(quotes);
+    renderQuote(getRandomQuote(quotes));
   });
 };
 
 const toggleCategory = () => {
   activeCategory = activeCategory === 'cinematic' ? 'random' : 'cinematic';
-  toggleCategoryButton.textContent = `Toggle Category: ${activeCategory === 'cinematic' ? 'Cinematic' : 'Random'}`;
+  toggleCategoryButton.textContent = `Category: ${activeCategory === 'cinematic' ? 'Cinematic' : 'Random'}`;
 
   fetchQuotes(`/quotes/${activeCategory}`)
   .then(quotes => {
-    renderQuotes(quotes);
+    renderQuote(getRandomQuote(quotes));
   });
 };
 
-fetchAllButton.addEventListener('click', fetchAllQuotes);
-fetchRandomButton.addEventListener('click', fetchRandomQuote);
+nextQuoteButton.addEventListener('click', fetchRandomQuote);
 fetchByAuthorButton.addEventListener('click', fetchByAuthor);
 toggleCategoryButton.addEventListener('click', toggleCategory);
