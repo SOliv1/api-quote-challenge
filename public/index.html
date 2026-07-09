@@ -1,33 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en">
-<head>
-  <title>Quote API</title>
-  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <h1>Quote API</h1>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="add-quote.html">Add a New Quote</a>
-  </nav>
-  <h2>Get Quotes</h2>
-  <div class="request-buttons">
-    <div>
-      <button id="fetch-random">Fetch a Random Quote</button>
-      <button id="fetch-quotes">Fetch all Quotes</button>
-    </div>
-    <div>
-      <input id="author" value="">
-      <button id="fetch-by-author">Fetch by Author</button>
-    </div>
-  </div>
-  <div id="quote-container">
--
-  </div>
-  <script src="js/script.js"></script>
-</body>
-</html>
+  <head>
+    <title>Cinematic Quotations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Cinematic Quotations Favicons -->
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="favicon-512.png" />
 
+    <!-- Dark Mode Favicons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicon-dark-16.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicon-dark-32.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="64x64"
+      href="favicon-dark-64.png"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="512x512"
+      href="favicon-dark-512.png"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <meta name="theme-color" content="#6a00f4" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body class="home-page">
+    <div id="splash" role="status" aria-live="polite">
+      <img src="images/cinematic-icon.png" alt="Cinematic Quotations logo" />
+    </div>
+
+    <main class="home-shell" hidden>
+      <section class="quote-form-column">
+        <h1>Cinematic Quotations</h1>
+        <h2>A Home for Words That Stay</h2>
+
+        <nav>
+          <a href="index.html">Home</a>
+          <a href="add-quote.html">Add a New Quote</a>
+        </nav>
+
+        <div class="home-copy">
+          <h2>Get Quotes</h2>
+          <p>
+            Browse everything, fetch a quick random quote, or narrow results by
+            author and category.
+          </p>
+        </div>
+
+        <div class="home-controls">
+          <div class="control-group">
+            <h3>Browse Quotes</h3>
+            <div class="action-stack">
+              <button id="fetch-random">Fetch a Random Quote</button>
+              <button id="fetch-quotes">Fetch all Quotes</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Filter by Author</h3>
+            <label for="author">Author name</label>
+            <input id="author" value="" placeholder="Grace Hopper" />
+            <button id="fetch-by-author">Fetch by Author</button>
+          </div>
+
+          <div class="control-group">
+            <h3>Filter by Category</h3>
+            <label for="category">Category name</label>
+            <input id="category" value="" placeholder="technology" />
+            <div class="action-stack inline-actions">
+              <button id="fetch-by-category">Fetch by Category</button>
+              <button id="fetch-by-author-category">
+                Fetch by Author + Category
+              </button>
+              <button id="fetch-categories">Show Categories</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="results-panel">
+          <h2>Results</h2>
+          <div id="quote-container">-</div>
+        </section>
+      </section>
+
+      <aside class="decorative-q" aria-hidden="true"></aside>
+    </main>
+    <script src="js/script.js"></script>
+  </body>
+</html>

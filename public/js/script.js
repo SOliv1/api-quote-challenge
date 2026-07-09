@@ -1,10 +1,31 @@
 const fetchAllButton = document.getElementById('fetch-quotes');
 const fetchRandomButton = document.getElementById('fetch-random');
 const fetchByAuthorButton = document.getElementById('fetch-by-author');
+const fetchByCategoryButton = document.getElementById('fetch-by-category');
+const fetchByAuthorCategoryButton = document.getElementById('fetch-by-author-category');
+const fetchCategoriesButton = document.getElementById('fetch-categories');
 
 const quoteContainer = document.getElementById('quote-container');
 const quoteText = document.querySelector('.quote');
 const attributionText = document.querySelector('.attribution');
+const splashElement = document.getElementById('splash');
+const homeShell = document.querySelector('.home-shell');
+
+const revealHome = () => {
+  if (homeShell) {
+    homeShell.hidden = false;
+  }
+
+  if (splashElement) {
+    splashElement.remove();
+  }
+};
+
+if (splashElement && homeShell) {
+  setTimeout(revealHome, 2500);
+} else {
+  revealHome();
+}
 
 const resetQuotes = () => {
   quoteContainer.innerHTML = '';
@@ -23,7 +44,8 @@ const renderQuotes = (quotes = []) => {
       const newQuote = document.createElement('div');
       newQuote.className = 'single-quote';
       newQuote.innerHTML = `<div class="quote-text">${quote.quote}</div>
-      <div class="attribution">- ${quote.person}</div>`;
+      <div class="attribution">- ${quote.person}</div>
+      <div class="attribution">Category: ${quote.category || 'general'}</div>`;
       quoteContainer.appendChild(newQuote);
     });
   } else {
@@ -61,7 +83,7 @@ fetchRandomButton.addEventListener('click', () => {
 
 fetchByAuthorButton.addEventListener('click', () => {
   const author = document.getElementById('author').value;
-  fetch(`/api/quotes?person=${author}`)
+  fetch(`/api/quotes?person=${encodeURIComponent(author)}`)
   .then(response => {
     if (response.ok) {
       return response.json();
@@ -71,5 +93,50 @@ fetchByAuthorButton.addEventListener('click', () => {
   })
   .then(response => {
     renderQuotes(response.quotes);
+  });
+});
+
+fetchByCategoryButton.addEventListener('click', () => {
+  const category = document.getElementById('category').value;
+  fetch(`/api/quotes?category=${encodeURIComponent(category)}`)
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      renderError(response);
+    }
+  })
+  .then(response => {
+    renderQuotes(response.quotes);
+  });
+});
+
+fetchByAuthorCategoryButton.addEventListener('click', () => {
+  const author = document.getElementById('author').value;
+  const category = document.getElementById('category').value;
+  fetch(`/api/quotes?person=${encodeURIComponent(author)}&category=${encodeURIComponent(category)}`)
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      renderError(response);
+    }
+  })
+  .then(response => {
+    renderQuotes(response.quotes);
+  });
+});
+
+fetchCategoriesButton.addEventListener('click', () => {
+  fetch('/api/categories')
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      renderError(response);
+    }
+  })
+  .then(response => {
+    quoteContainer.innerHTML = `<p>Available categories: ${response.categories.join(', ')}</p>`;
   });
 });
