@@ -1,5 +1,6 @@
 const submitButton = document.getElementById('submit-quote');
 const newQuoteContainer = document.getElementById('new-quote');
+const manageQuotesDrawer = document.querySelector('.manage-quotes');
 const quoteListContainer = document.getElementById('quote-list');
 
 const getQuoteContent = (quote) => quote.text || quote.quote;
@@ -80,7 +81,10 @@ submitButton.addEventListener('click', () => {
       <div class="attribution">- ${quote.person}</div>
       <p>Go to the <a href="/index.html">home page</a> to request and view all quotes.</p>
       `;
-      loadQuotes();
+
+      if (manageQuotesDrawer.open) {
+        loadQuotes();
+      }
     });
 });
 
@@ -92,4 +96,8 @@ quoteListContainer.addEventListener('click', (event) => {
   removeQuote(event.target.dataset.id);
 });
 
-loadQuotes();
+manageQuotesDrawer.addEventListener('toggle', () => {
+  if (manageQuotesDrawer.open) {
+    loadQuotes();
+  }
+});

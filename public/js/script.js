@@ -7,6 +7,7 @@ const quotePerson = document.getElementById('quote-person');
 const splashElement = document.getElementById('splash');
 const homeShell = document.querySelector('.home-shell');
 let activeCategory = 'cinematic';
+let fadeTimeout;
 
 const revealHome = () => {
   if (homeShell) {
@@ -25,18 +26,18 @@ if (splashElement && homeShell) {
 }
 
 const showMessage = (message, person = '') => {
+  clearTimeout(fadeTimeout);
   quoteText.classList.remove('show');
   quotePerson.classList.remove('show');
 
-  setTimeout(() => {
+  fadeTimeout = setTimeout(() => {
     quoteText.textContent = message;
     quotePerson.textContent = person;
     quoteText.classList.add('show');
     quotePerson.classList.add('show');
-  }, 120);
+  }, 800);
 };
 
-showMessage('-', '');
 
 const renderQuote = (quote) => {
   if (!quote) {
