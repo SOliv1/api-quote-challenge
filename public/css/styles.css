@@ -445,6 +445,17 @@ body.home-page .decorative-q {
   }
 }
 
+/* Footer */
+
+.site-footer {
+  text-align: center;
+  padding: 1.5rem 0;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+
 /* Splash Screen */
 #splash {
   background: linear-gradient(135deg, #6a00f4, #00b3b3);
