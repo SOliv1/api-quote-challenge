@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const { randomUUID } = require('crypto');
 const Quote = require('./models/Quote');
 const app = express();
 
@@ -11,7 +12,10 @@ const quotes = [
   ...require('./data/nature.json'),
   ...require('./data/poetic.json'),
   ...require('./data/wildcard.json')
-];
+].map((quote) => ({
+  _id: `local-${randomUUID()}`,
+  ...quote
+}));
 
 if (process.env.MONGO_URI) {
   mongoose.connect(process.env.MONGO_URI)
@@ -26,7 +30,7 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const categories = [...new Set(quotes.map((quote) => quote.category))].sort();
 const isMongoConnected = () => mongoose.connection.readyState === 1;
 const normalizeQuote = (quote) => ({
-  _id: quote._id,
+  _id: quote._id ? String(quote._id) : undefined,
   text: quote.text || quote.quote,
   quote: quote.quote || quote.text,
   person: quote.person,
@@ -285,13 +289,56 @@ app.post('/api/quotes', async (req, res, next) => {
       return res.status(201).send({ quote: normalizeQuote(createdQuote.toObject()) });
     }
 
-    quotes.push({
+    const localQuote = {
+      _id: `local-${randomUUID()}`,
       quote: newQuote.text,
       person: newQuote.person,
       category: newQuote.category
-    });
+    };
 
-    return res.status(201).send({ quote: normalizeQuote(newQuote) });
+    quotes.push(localQuote);
+
+    return res.status(201).send({ quote: normalizeQuote(localQuote) });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+app.delete('/api/quotes/:id', async (req, res, next) => {
+  try {
+    if (isMongoConnected()) {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).send({
+          error: 'Invalid quote id.'
+        });
+      }
+
+      const deletedQuote = await Quote.findByIdAndDelete(req.params.id).lean();
+
+      if (!deletedQuote) {
+        return res.status(404).send({
+          error: 'Quote not found.'
+        });
+      }
+
+      return res.send({
+        quote: normalizeQuote(deletedQuote)
+      });
+    }
+
+    const quoteIndex = quotes.findIndex((quote) => String(quote._id) === req.params.id);
+
+    if (quoteIndex === -1) {
+      return res.status(404).send({
+        error: 'Quote not found.'
+      });
+    }
+
+    const [deletedQuote] = quotes.splice(quoteIndex, 1);
+
+    return res.send({
+      quote: normalizeQuote(deletedQuote)
+    });
   } catch (error) {
     return next(error);
   }

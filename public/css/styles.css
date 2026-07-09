@@ -282,6 +282,33 @@ button:hover {
   font-style: italic;
 }
 
+#quote-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.quote-list-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.24);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.quote-list-item .quote-text {
+  line-height: 1.45;
+}
+
+.remove-quote {
+  min-height: 48px;
+  padding: 0.35rem 1rem;
+  font-size: 1rem;
+  background: linear-gradient(102deg, #a83f79 5%, #bc5378 58%, #d56b72 100%);
+}
+
 body.add-quote-page .decorative-q,
 body.home-page .decorative-q {
   width: 100%;
@@ -385,6 +412,10 @@ body.home-page .decorative-q {
   .home-copy p,
   #quote-container .quote-text {
     font-size: 1.02rem;
+  }
+
+  .quote-list-item {
+    grid-template-columns: 1fr;
   }
 }
 
