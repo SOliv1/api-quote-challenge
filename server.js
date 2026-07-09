@@ -2,24 +2,104 @@ require('dotenv').config();
 
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+const Quote = require('./models/Quote');
 const app = express();
 
 const quotes = [
-  {
-    quote: 'The past is just a story we tell ourselves.',
-    person: 'Unknown',
-    category: 'cinematic'
-  },
-  {
-    quote: 'Peace is the rhythm between breath and light.',
-    person: 'Unknown',
-    category: 'random'
-  }
+  ...require('./data/cinematic.json'),
+  ...require('./data/nature.json'),
+  ...require('./data/poetic.json'),
+  ...require('./data/wildcard.json')
 ];
+
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error(err));
+} else {
+  console.warn('MONGO_URI is not set. Using local in-memory quotes.');
+}
 
 // Utility: pick a random item
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const categories = [...new Set(quotes.map((quote) => quote.category))].sort();
+const isMongoConnected = () => mongoose.connection.readyState === 1;
+const normalizeQuote = (quote) => ({
+  _id: quote._id,
+  text: quote.text || quote.quote,
+  quote: quote.quote || quote.text,
+  person: quote.person,
+  category: quote.category
+});
+
+const getStoredQuotes = async ({ person, category } = {}) => {
+  const normalizedPerson = person ? String(person).toLowerCase() : undefined;
+  const normalizedCategory = category ? String(category).toLowerCase() : undefined;
+
+  if (isMongoConnected()) {
+    const query = {};
+
+    if (normalizedPerson) {
+      query.person = new RegExp(`^${normalizedPerson.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+    }
+
+    if (normalizedCategory) {
+      query.category = normalizedCategory;
+    }
+
+    const storedQuotes = await Quote.find(query).lean();
+    return storedQuotes.map(normalizeQuote);
+  }
+
+  return quotes
+    .filter((quote) => {
+      const matchesPerson = normalizedPerson === undefined || quote.person.toLowerCase() === normalizedPerson;
+      const matchesCategory = normalizedCategory === undefined || quote.category.toLowerCase() === normalizedCategory;
+      return matchesPerson && matchesCategory;
+    })
+    .map(normalizeQuote);
+};
+
+const sendQuotes = async (req, res, next) => {
+  try {
+    const storedQuotes = await getStoredQuotes(req.query);
+    res.send({
+      quotes: storedQuotes
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendQuotesArray = async (req, res, next) => {
+  try {
+    const storedQuotes = await getStoredQuotes(req.query);
+    res.json(storedQuotes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendCategoryQuotes = async (req, res, next) => {
+  try {
+    const storedQuotes = await getStoredQuotes({ category: req.params.category });
+    res.send({
+      quotes: storedQuotes
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendCategoryQuotesArray = async (req, res, next) => {
+  try {
+    const storedQuotes = await getStoredQuotes({ category: req.params.category });
+    res.json(storedQuotes);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const getApiNinjasKey = () => process.env.API_NINJAS_KEY;
 
@@ -59,11 +139,17 @@ const fetchApiNinjas = async (path) => {
 const PORT = process.env.PORT || 4000;
 
 app.use(express.static('public'));
+app.use(express.json());
 
-app.get('/api/quote/random', (req, res) => {
-  res.send({
-    quote: pick(quotes)
-  });
+app.get('/api/quote/random', async (req, res, next) => {
+  try {
+    const storedQuotes = await getStoredQuotes();
+    res.send({
+      quote: pick(storedQuotes)
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.get('/api/categories', (req, res) => {
@@ -172,45 +258,50 @@ app.get('/api/animals', async (req, res) => {
   }
 });
 
-app.get('/api/quotes', (req, res, next) => {
-  const { person, category } = req.query;
-  const normalizedPerson = person ? String(person).toLowerCase() : undefined;
-  const normalizedCategory = category ? String(category).toLowerCase() : undefined;
+app.get('/api/quotes', sendQuotes);
+app.get('/api/quotes/:category', sendCategoryQuotes);
+app.get('/quotes', sendQuotesArray);
+app.get('/quotes/:category', sendCategoryQuotesArray);
 
-  const filteredQuotes = quotes.filter((quote) => {
-    const matchesPerson = normalizedPerson === undefined || quote.person.toLowerCase() === normalizedPerson;
-    const matchesCategory = normalizedCategory === undefined || quote.category.toLowerCase() === normalizedCategory;
-    return matchesPerson && matchesCategory;
-  });
-
-  res.send({
-    quotes: filteredQuotes
-  });
-});
-
-app.get('/api/quotes/:category', (req, res) => {
-  const normalizedCategory = String(req.params.category).toLowerCase();
-  const categoryQuotes = quotes.filter((quote) => quote.category.toLowerCase() === normalizedCategory);
-
-  res.send({
-    quotes: categoryQuotes
-  });
-});
-
-app.post('/api/quotes', (req, res) => {
-  const category = req.query.category ? String(req.query.category).toLowerCase() : 'general';
+app.post('/api/quotes', async (req, res, next) => {
+  const source = Object.keys(req.body || {}).length > 0 ? req.body : req.query;
+  const category = source.category ? String(source.category).toLowerCase() : 'random';
 
   const newQuote = {
-    quote: req.query.quote,
-    person: req.query.person,
+    text: source.text || source.quote,
+    person: source.person,
     category
   };
-  if (newQuote.quote && newQuote.person) {
-    quotes.push(newQuote);
-    res.send({ quote: newQuote });
-  } else {
-    res.status(400).send();
+
+  if (!newQuote.text || !newQuote.person) {
+    return res.status(400).send({
+      error: 'Both text and person are required.'
+    });
   }
+
+  try {
+    if (isMongoConnected()) {
+      const createdQuote = await Quote.create(newQuote);
+      return res.status(201).send({ quote: normalizeQuote(createdQuote.toObject()) });
+    }
+
+    quotes.push({
+      quote: newQuote.text,
+      person: newQuote.person,
+      category: newQuote.category
+    });
+
+    return res.status(201).send({ quote: normalizeQuote(newQuote) });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send({
+    error: 'Something went wrong.'
+  });
 });
 
 app.listen(PORT, () => {

@@ -5,13 +5,15 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --check server.js && node --check utils.js && node --check scripts.js && node --check public/js/script.js && node --check public/js/add-quote.js && node --check public/add-quote.js"
+    "seed": "node scripts/seedQuotes.js",
+    "test": "node --check server.js && node --check utils.js && node --check scripts.js && node --check scripts/seedQuotes.js && node --check public/js/script.js && node --check public/js/add-quote.js && node --check public/add-quote.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^4.22.1",
+    "mongoose": "^9.7.4",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

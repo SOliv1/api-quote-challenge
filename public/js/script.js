@@ -42,9 +42,10 @@ const renderQuotes = (quotes = []) => {
   resetQuotes();
   if (quotes.length > 0) {
     quotes.forEach(quote => {
+      const quoteContent = quote.text || quote.quote;
       const newQuote = document.createElement('div');
       newQuote.className = 'single-quote';
-      newQuote.innerHTML = `<div class="quote-text">${quote.quote}</div>
+      newQuote.innerHTML = `<div class="quote-text">${quoteContent}</div>
       <div class="attribution">- ${quote.person}</div>
       <div class="attribution">Category: ${quote.category || 'general'}</div>`;
       quoteContainer.appendChild(newQuote);
@@ -63,9 +64,10 @@ const renderCategoryQuotes = (targetElement, quotes = [], emptyMessage) => {
 
   if (quotes.length > 0) {
     quotes.forEach((quote) => {
+      const quoteContent = quote.text || quote.quote;
       const newQuote = document.createElement('div');
       newQuote.className = 'single-quote';
-      newQuote.innerHTML = `<div class="quote-text">${quote.quote}</div>
+      newQuote.innerHTML = `<div class="quote-text">${quoteContent}</div>
       <div class="attribution">- ${quote.person}</div>`;
       targetElement.appendChild(newQuote);
     });
@@ -86,7 +88,8 @@ const fetchCategorySection = (category, targetElement, emptyMessage) => {
     })
     .then((response) => {
       if (response) {
-        renderCategoryQuotes(targetElement, response.quotes, emptyMessage);
+        const quotes = Array.isArray(response) ? response : response.quotes;
+        renderCategoryQuotes(targetElement, quotes, emptyMessage);
       }
     });
 };
