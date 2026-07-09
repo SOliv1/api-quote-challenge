@@ -1,0 +1,31 @@
+{
+  "name": "Cinematic Quotations",
+  "short_name": "CineQuotes",
+  "description": "A quote app for browsing and adding cinematic quotations.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0033",
+  "theme_color": "#6a00f4",
+  "icons": [
+    {
+      "src": "/favicon-64.png?v=2",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-512.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-512.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
