@@ -76,83 +76,54 @@ const renderCategoryQuotes = (targetElement, quotes = [], emptyMessage) => {
   }
 };
 
-const fetchCategorySection = (category, targetElement, emptyMessage) => {
-  fetch(`/api/quotes/${encodeURIComponent(category)}`)
+const fetchQuotes = (path) => {
+  return fetch(path)
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
 
-      targetElement.innerHTML = `<p>Unable to load ${category} quotes right now.</p>`;
-      return null;
+      renderError(response);
+      return [];
     })
     .then((response) => {
-      if (response) {
-        const quotes = Array.isArray(response) ? response : response.quotes;
-        renderCategoryQuotes(targetElement, quotes, emptyMessage);
-      }
+      return Array.isArray(response) ? response : response.quotes;
     });
 };
 
-fetchCategorySection('cinematic', cinematicListContainer, 'No cinematic quotes found.');
-fetchCategorySection('random', randomListContainer, 'No random quotes found.');
-
-fetchAllButton.addEventListener('click', () => {
-  fetch('/api/quotes')
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then(response => {
-    renderQuotes(response.quotes);
+const fetchAllQuotes = () => {
+  fetchQuotes('/quotes')
+  .then(quotes => {
+    renderQuotes(quotes);
   });
-});
+};
 
-fetchRandomButton.addEventListener('click', () => {
-  fetch('/api/quote/random')
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then(response => {
-    renderQuotes([response.quote]);
+const fetchRandomQuote = () => {
+  fetchQuotes('/quotes/random')
+  .then(quotes => {
+    renderQuotes(quotes.length > 0 ? [quotes[Math.floor(Math.random() * quotes.length)]] : []);
   });
-});
+};
 
-fetchByAuthorButton.addEventListener('click', () => {
+const fetchByAuthor = () => {
   const author = document.getElementById('author').value;
-  fetch(`/api/quotes?person=${encodeURIComponent(author)}`)
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then(response => {
-    renderQuotes(response.quotes);
+  fetchQuotes(`/quotes?person=${encodeURIComponent(author)}`)
+  .then(quotes => {
+    renderQuotes(quotes);
   });
-});
+};
 
-toggleCategoryButton.addEventListener('click', () => {
+const toggleCategory = () => {
   activeCategory = activeCategory === 'cinematic' ? 'random' : 'cinematic';
   toggleCategoryButton.textContent = `Toggle Category: ${activeCategory === 'cinematic' ? 'Cinematic' : 'Random'}`;
 
-  fetch(`/api/quotes/${activeCategory}`)
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then(response => {
-    renderQuotes(response.quotes);
+  fetchQuotes(`/quotes/${activeCategory}`)
+  .then(quotes => {
+    renderQuotes(quotes);
   });
-});
+};
+
+fetchAllButton.addEventListener('click', fetchAllQuotes);
+fetchRandomButton.addEventListener('click', fetchRandomQuote);
+fetchByAuthorButton.addEventListener('click', fetchByAuthor);
+toggleCategoryButton.addEventListener('click', toggleCategory);
