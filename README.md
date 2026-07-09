@@ -1,8 +1,10 @@
+# Quote API Challenge
+
 [![pages-build-deployment](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/SOliv1/api-quote-challenge/tree/circleci-project-setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/SOliv1/api-quote-challenge/tree/circleci-project-setup)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/SOliv1/api-quote-challenge/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/SOliv1/api-quote-challenge/tree/master)
 
-You can view on Render [here](https://quote-api.onrender.com/)
+You can view on Render [Quote API](https://quote-api.onrender.com/)
 
 ## Features
 
@@ -14,9 +16,9 @@ You can view on Render [here](https://quote-api.onrender.com/)
 
 npm install to add all dependencies
 
-*command: node server.js*
+##### command: node server.js
 
-*using node* 
+##### using node
 
 This project is slightly different than others you have encountered thus far on Codecademy. Instead of a step-by-step tutorial, this project contains a series of open-ended requirements which describe the project you’ll be building. There are many possible ways to correctly fulfill all of these requirements, and you should expect to use the internet, Codecademy, and other resources when you encounter a problem that you cannot easily solve.
 

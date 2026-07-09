@@ -4,7 +4,8 @@
   "description": "A small quote-serving JSON API.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --check server.js && node --check utils.js && node --check scripts.js && node --check public/js/script.js && node --check public/js/add-quote.js && node --check public/add-quote.js"
   },
   "author": "",
   "license": "ISC",
