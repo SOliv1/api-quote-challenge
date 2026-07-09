@@ -5,7 +5,7 @@
 ![Coverage](public/images/coverage-badge.svg)
 ![Status](public/images/status-badge.svg)
 
-You can view on Render [Quote API](https://cinematic-quotations-evez.onrender.com)
+You can view on Render [Cinematic Quotes](https://cinematic-quotations-evez.onrender.com)
 
 ## Features
 
