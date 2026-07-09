@@ -8,6 +8,24 @@ const fetchCategoriesButton = document.getElementById('fetch-categories');
 const quoteContainer = document.getElementById('quote-container');
 const quoteText = document.querySelector('.quote');
 const attributionText = document.querySelector('.attribution');
+const splashElement = document.getElementById('splash');
+const homeShell = document.querySelector('.home-shell');
+
+const revealHome = () => {
+  if (homeShell) {
+    homeShell.hidden = false;
+  }
+
+  if (splashElement) {
+    splashElement.remove();
+  }
+};
+
+if (splashElement && homeShell) {
+  setTimeout(revealHome, 2400);
+} else {
+  revealHome();
+}
 
 const resetQuotes = () => {
   quoteContainer.innerHTML = '';
