@@ -1,12 +1,52 @@
 [
-  { "quote": "The morning field remembers every footstep.", "author": "Unknown" },
-  { "quote": "Light rests on the hills as if listening.", "author": "Unknown" },
-  { "quote": "A quiet wind rearranges the day.", "author": "Unknown" },
-  { "quote": "Water keeps the shape of every passing cloud.", "author": "Unknown" },
-  { "quote": "The forest speaks in patient syllables.", "author": "Unknown" },
-  { "quote": "Rain writes its own brief history.", "author": "Unknown" },
-  { "quote": "The horizon softens when the heart does.", "author": "Unknown" },
-  { "quote": "A single leaf can steady the whole afternoon.", "author": "Unknown" },
-  { "quote": "The sky leans closer in moments of clarity.", "author": "Unknown" },
-  { "quote": "Stillness is the oldest form of weather.", "author": "Unknown" }
+  {
+    "text": "The morning field remembers every footstep.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "Light rests on the hills as if listening.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "A quiet wind rearranges the day.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "Water keeps the shape of every passing cloud.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "The forest speaks in patient syllables.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "Rain writes its own brief history.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "The horizon softens when the heart does.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "A single leaf can steady the whole afternoon.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "The sky leans closer in moments of clarity.",
+    "person": "Unknown",
+    "category": "random"
+  },
+  {
+    "text": "Stillness is the oldest form of weather.",
+    "person": "Unknown",
+    "category": "random"
+  }
 ]

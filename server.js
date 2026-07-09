@@ -4,7 +4,18 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
-const { quotes } = require('./data/data');
+const quotes = [
+  {
+    quote: 'The past is just a story we tell ourselves.',
+    person: 'Unknown',
+    category: 'cinematic'
+  },
+  {
+    quote: 'Peace is the rhythm between breath and light.',
+    person: 'Unknown',
+    category: 'random'
+  }
+];
 
 // Utility: pick a random item
 const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -49,7 +60,7 @@ const PORT = process.env.PORT || 4000;
 
 app.use(express.static('public'));
 
-app.get('/api/quotes/random', (req, res) => {
+app.get('/api/quote/random', (req, res) => {
   res.send({
     quote: pick(quotes)
   });
@@ -174,6 +185,15 @@ app.get('/api/quotes', (req, res, next) => {
 
   res.send({
     quotes: filteredQuotes
+  });
+});
+
+app.get('/api/quotes/:category', (req, res) => {
+  const normalizedCategory = String(req.params.category).toLowerCase();
+  const categoryQuotes = quotes.filter((quote) => quote.category.toLowerCase() === normalizedCategory);
+
+  res.send({
+    quotes: categoryQuotes
   });
 });
 

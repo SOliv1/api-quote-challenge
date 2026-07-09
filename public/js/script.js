@@ -1,15 +1,16 @@
 const fetchAllButton = document.getElementById('fetch-quotes');
 const fetchRandomButton = document.getElementById('fetch-random');
 const fetchByAuthorButton = document.getElementById('fetch-by-author');
-const fetchByCategoryButton = document.getElementById('fetch-by-category');
-const fetchByAuthorCategoryButton = document.getElementById('fetch-by-author-category');
-const fetchCategoriesButton = document.getElementById('fetch-categories');
+const toggleCategoryButton = document.getElementById('toggle-category');
 
 const quoteContainer = document.getElementById('quote-container');
+const cinematicListContainer = document.getElementById('cinematic-list');
+const randomListContainer = document.getElementById('random-list');
 const quoteText = document.querySelector('.quote');
 const attributionText = document.querySelector('.attribution');
 const splashElement = document.getElementById('splash');
 const homeShell = document.querySelector('.home-shell');
+let activeCategory = 'cinematic';
 
 const revealHome = () => {
   if (homeShell) {
@@ -53,6 +54,46 @@ const renderQuotes = (quotes = []) => {
   }
 }
 
+const renderCategoryQuotes = (targetElement, quotes = [], emptyMessage) => {
+  if (!targetElement) {
+    return;
+  }
+
+  targetElement.innerHTML = '';
+
+  if (quotes.length > 0) {
+    quotes.forEach((quote) => {
+      const newQuote = document.createElement('div');
+      newQuote.className = 'single-quote';
+      newQuote.innerHTML = `<div class="quote-text">${quote.quote}</div>
+      <div class="attribution">- ${quote.person}</div>`;
+      targetElement.appendChild(newQuote);
+    });
+  } else {
+    targetElement.innerHTML = `<p>${emptyMessage}</p>`;
+  }
+};
+
+const fetchCategorySection = (category, targetElement, emptyMessage) => {
+  fetch(`/api/quotes/${encodeURIComponent(category)}`)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      targetElement.innerHTML = `<p>Unable to load ${category} quotes right now.</p>`;
+      return null;
+    })
+    .then((response) => {
+      if (response) {
+        renderCategoryQuotes(targetElement, response.quotes, emptyMessage);
+      }
+    });
+};
+
+fetchCategorySection('cinematic', cinematicListContainer, 'No cinematic quotes found.');
+fetchCategorySection('random', randomListContainer, 'No random quotes found.');
+
 fetchAllButton.addEventListener('click', () => {
   fetch('/api/quotes')
   .then(response => {
@@ -68,7 +109,7 @@ fetchAllButton.addEventListener('click', () => {
 });
 
 fetchRandomButton.addEventListener('click', () => {
-  fetch('/api/quotes/random')
+  fetch('/api/quote/random')
   .then(response => {
     if (response.ok) {
       return response.json();
@@ -96,9 +137,11 @@ fetchByAuthorButton.addEventListener('click', () => {
   });
 });
 
-fetchByCategoryButton.addEventListener('click', () => {
-  const category = document.getElementById('category').value;
-  fetch(`/api/quotes?category=${encodeURIComponent(category)}`)
+toggleCategoryButton.addEventListener('click', () => {
+  activeCategory = activeCategory === 'cinematic' ? 'random' : 'cinematic';
+  toggleCategoryButton.textContent = `Toggle Category: ${activeCategory === 'cinematic' ? 'Cinematic' : 'Random'}`;
+
+  fetch(`/api/quotes/${activeCategory}`)
   .then(response => {
     if (response.ok) {
       return response.json();
@@ -108,35 +151,5 @@ fetchByCategoryButton.addEventListener('click', () => {
   })
   .then(response => {
     renderQuotes(response.quotes);
-  });
-});
-
-fetchByAuthorCategoryButton.addEventListener('click', () => {
-  const author = document.getElementById('author').value;
-  const category = document.getElementById('category').value;
-  fetch(`/api/quotes?person=${encodeURIComponent(author)}&category=${encodeURIComponent(category)}`)
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then(response => {
-    renderQuotes(response.quotes);
-  });
-});
-
-fetchCategoriesButton.addEventListener('click', () => {
-  fetch('/api/categories')
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      renderError(response);
-    }
-  })
-  .then(response => {
-    quoteContainer.innerHTML = `<p>Available categories: ${response.categories.join(', ')}</p>`;
   });
 });

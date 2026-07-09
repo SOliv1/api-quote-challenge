@@ -113,15 +113,9 @@
           </div>
 
           <div class="control-group">
-            <h3>Filter by Category</h3>
-            <label for="category">Category name</label>
-            <input id="category" value="" placeholder="technology" />
+            <h3>Category Shortcuts</h3>
             <div class="action-stack inline-actions">
-              <button id="fetch-by-category">Fetch by Category</button>
-              <button id="fetch-by-author-category">
-                Fetch by Author + Category
-              </button>
-              <button id="fetch-categories">Show Categories</button>
+              <button id="toggle-category">Toggle Category: Cinematic</button>
             </div>
           </div>
         </div>
@@ -129,6 +123,16 @@
         <section class="results-panel">
           <h2>Results</h2>
           <div id="quote-container">-</div>
+        </section>
+
+        <section id="cinematic" class="results-panel">
+          <h2>Cinematic Quotes</h2>
+          <div id="cinematic-list">-</div>
+        </section>
+
+        <section id="random" class="results-panel">
+          <h2>Random Quotes</h2>
+          <div id="random-list">-</div>
         </section>
       </section>
 
