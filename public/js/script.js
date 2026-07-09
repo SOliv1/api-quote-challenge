@@ -22,7 +22,7 @@ const revealHome = () => {
 };
 
 if (splashElement && homeShell) {
-  setTimeout(revealHome, 2400);
+  setTimeout(revealHome, 2500);
 } else {
   revealHome();
 }
