@@ -37,9 +37,38 @@ const normalizeQuote = (quote) => ({
   category: quote.category
 });
 
-const getStoredQuotes = async ({ person, category } = {}) => {
+const splitQueryList = (value) => {
+  if (!value) {
+    return [];
+  }
+
+  return String(value)
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+};
+
+const buildApiNinjasQuotePath = ({ categories, exclude_categories: excludeCategories } = {}) => {
+  const params = new URLSearchParams();
+
+  if (categories) {
+    params.set('categories', categories);
+  }
+
+  if (excludeCategories) {
+    params.set('exclude_categories', excludeCategories);
+  }
+
+  const queryString = params.toString();
+  return `/v1/quotes${queryString ? `?${queryString}` : ''}`;
+};
+
+const getStoredQuotes = async ({ person, category, categories: categoryList, exclude_categories: excludeCategories } = {}) => {
   const normalizedPerson = person ? String(person).toLowerCase() : undefined;
-  const normalizedCategory = category ? String(category).toLowerCase() : undefined;
+  const includedCategories = category
+    ? [String(category).toLowerCase()]
+    : splitQueryList(categoryList);
+  const excludedCategories = splitQueryList(excludeCategories);
 
   if (isMongoConnected()) {
     const query = {};
@@ -48,8 +77,16 @@ const getStoredQuotes = async ({ person, category } = {}) => {
       query.person = new RegExp(`^${normalizedPerson.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
     }
 
-    if (normalizedCategory) {
-      query.category = normalizedCategory;
+    if (includedCategories.length > 0 || excludedCategories.length > 0) {
+      query.category = {};
+
+      if (includedCategories.length > 0) {
+        query.category.$in = includedCategories;
+      }
+
+      if (excludedCategories.length > 0) {
+        query.category.$nin = excludedCategories;
+      }
     }
 
     const storedQuotes = await Quote.find(query).lean();
@@ -59,7 +96,10 @@ const getStoredQuotes = async ({ person, category } = {}) => {
   return quotes
     .filter((quote) => {
       const matchesPerson = normalizedPerson === undefined || quote.person.toLowerCase() === normalizedPerson;
-      const matchesCategory = normalizedCategory === undefined || quote.category.toLowerCase() === normalizedCategory;
+      const normalizedQuoteCategory = quote.category.toLowerCase();
+      const matchesIncludedCategories = includedCategories.length === 0 || includedCategories.includes(normalizedQuoteCategory);
+      const matchesExcludedCategories = !excludedCategories.includes(normalizedQuoteCategory);
+      const matchesCategory = matchesIncludedCategories && matchesExcludedCategories;
       return matchesPerson && matchesCategory;
     })
     .map(normalizeQuote);
@@ -163,7 +203,7 @@ app.get('/api/categories', (req, res) => {
 });
 
 app.get('/api/v2/randomquotes', async (req, res) => {
-  const apiResult = await fetchApiNinjas('/v1/quotes');
+  const apiResult = await fetchApiNinjas(buildApiNinjasQuotePath(req.query));
   if (!apiResult.ok) {
     return res.status(apiResult.status).send(apiResult.body);
   }
