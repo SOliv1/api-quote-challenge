@@ -2,7 +2,9 @@
 
 [![pages-build-deployment](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SOliv1/api-quote-challenge/actions/workflows/pages/pages-build-deployment)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/SOliv1/api-quote-challenge/tree/circleci-project-setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/SOliv1/api-quote-challenge/tree/circleci-project-setup)
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/SOliv1/api-quote-challenge/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/SOliv1/api-quote-challenge/tree/master)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/SOliv1/api-quote-challenge/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/SOliv1/api-quote-challenge/tree/master) 
+
+
 
 You can view on Render [Quote API](https://quote-api.onrender.com/)
 
